@@ -2,32 +2,45 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as path from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Enable CORS for frontend requests
-  app.enableCors();
+  const configService = app.get(ConfigService);
 
-  // app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: configService.get('CORS_ORIGIN') || '*', 
 
-  // Enable global validation pipes
-  app.useGlobalPipes(new ValidationPipe());
+  });
 
-  // Set up Swagger
-  const config = new DocumentBuilder()
+  // app.setGlobalPrefix(configService.get('API_PREFIX') || 'api'); 
+  
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, 
+    forbidNonWhitelisted: true, 
+  }));
+
+  // Set up Swagger documentation
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('API Documentation')
-    .setDescription('API for managing users')
+    .setDescription('API for managing users and other resources')
     .setVersion('1.0')
-    .addBearerAuth() // JWT authentication support
+    .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, swaggerDocument);
 
-  await app.listen(3000);
-  console.log(`🚀 Application is running on: http://localhost:3000`);
-  console.log(`📄 Swagger docs available at: http://localhost:3000/api/docs`);
+  app.setViewEngine('hbs');
+  app.setBaseViewsDir(path.join(__dirname, '..', 'views'));
+
+  await app.listen(configService.get('PORT') || 3000);
+  console.log(`🚀 Application is running on: http://localhost:${configService.get('PORT') || 3000}`);
+  console.log(`📄 Swagger docs available at: http://localhost:${configService.get('PORT') || 3000}/api/docs`);
 }
 
 bootstrap();
