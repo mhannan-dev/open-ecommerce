@@ -7,11 +7,12 @@ Welcome to the Open Source E-Commerce Project! This project is a modern, scalabl
 - **Backend (NestJS):**
   - RESTful API with TypeScript
   - Authentication and Authorization (JWT, OAuth2)
-  - Database integration (PostgreSQL, MongoDB, or MySQL)
+  - Database integration (MySQL)
   - Product, Order, and User management
   - Payment gateway integration (Stripe, PayPal, etc.)
   - Caching and rate limiting
   - Unit and integration testing
+  - API documentation with **Swagger**
 
 - **Frontend (Next.js):**
   - Server-side rendering (SSR) and static site generation (SSG)
@@ -21,11 +22,6 @@ Welcome to the Open Source E-Commerce Project! This project is a modern, scalabl
   - User profile and order history
   - SEO optimization
 
-- **DevOps:**
-  - Dockerized setup for easy deployment
-  - CI/CD pipeline integration
-  - Kubernetes support for scaling
-
 ## Getting Started
 
 Follow these steps to set up the project locally:
@@ -34,8 +30,7 @@ Follow these steps to set up the project locally:
 
 - Node.js (v16 or higher)
 - npm or yarn
-- Docker (optional, for containerized setup)
-- PostgreSQL, MongoDB, or MySQL database
+- MySQL database
 
 ### Installation
 
@@ -59,7 +54,7 @@ Follow these steps to set up the project locally:
 3. **Set up environment variables:**
    - Create a `.env` file in the `backend` folder and add the following:
      ```env
-     DATABASE_URL=your_database_url
+     DATABASE_URL=mysql://username:password@localhost:3306/database_name
      JWT_SECRET=your_jwt_secret
      STRIPE_SECRET_KEY=your_stripe_secret_key
      ```
@@ -68,34 +63,34 @@ Follow these steps to set up the project locally:
      NEXT_PUBLIC_API_URL=http://localhost:3000
      ```
 
-4. **Run the backend:**
+4. **Run MySQL database:**
+   Ensure MySQL is installed and running. You may need to create the database manually:
+   ```sql
+   CREATE DATABASE ecommerce_db;
+   ```
+
+5. **Run database migrations:**
+   ```bash
+   cd backend
+   npm run migration:run
+   ```
+
+6. **Run the backend:**
    ```bash
    cd backend
    npm run start:dev
    ```
 
-5. **Run the frontend:**
+7. **Run the frontend:**
    ```bash
    cd frontend
    npm run dev
    ```
 
-6. **Access the application:**
+8. **Access the application:**
    - Backend: `http://localhost:3000`
    - Frontend: `http://localhost:3001`
-
-### Docker Setup
-
-If you prefer using Docker, follow these steps:
-
-1. **Build and run the containers:**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Access the application:**
-   - Backend: `http://localhost:3000`
-   - Frontend: `http://localhost:3001`
+   - API Documentation (Swagger): `http://localhost:3000/api`
 
 ## Contributing
 
@@ -120,6 +115,7 @@ If you encounter any issues or have questions, feel free to open an issue on Git
 
 - [NestJS](https://nestjs.com) for the powerful backend framework.
 - [Next.js](https://nextjs.org) for the amazing frontend framework.
+- [Swagger](https://swagger.io) for API documentation.
 - All contributors and supporters of this project.
 
 ---
