@@ -8,16 +8,24 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./src",   
+    "paths": {           
+      "@entities/*": ["entities/*"],
+      "@services/*": ["services/*"],
+      "@repositories/*": ["repositories/*"],
+      "@seeds/*": ["seeds/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
-    "noImplicitAny": false,
+    "noImplicitAny": false,  
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "module": "commonjs",
+    "module": "commonjs",    
     "moduleResolution": "node",
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
