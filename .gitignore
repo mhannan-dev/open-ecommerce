@@ -15,7 +15,7 @@ lerna-debug.log*
 # OS
 .DS_Store
 .shopify
-
+.vscode
 # Tests
 /coverage
 /.nyc_output
