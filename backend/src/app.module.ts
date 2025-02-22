@@ -10,6 +10,7 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
+import { VendorsModule } from './vendors/vendors.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { CategoriesModule } from './categories/categories.module';
     PermissionsModule,
     AuthModule,
     CategoriesModule,
+    VendorsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
