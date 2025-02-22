@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('vendors')
+export class Vendor {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,6 +22,21 @@ export class User {
 
   @Column({ nullable: true })
   image: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  store_name: string;
+
+  @Column({ nullable: true })
+  vendor_type: string; // e.g., "individual", "business"
+
+  @Column({ default: true })
+  is_active: boolean; // to indicate if the vendor is active
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

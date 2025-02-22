@@ -11,6 +11,14 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { VendorsModule } from './vendors/vendors.module';
+import { ProductsModule } from './products/products.module';
+import { ProductVariantsModule } from './product-variants/product-variants.module';
+import { CustomersModule } from './customers/customers.module';
+import { OrdersModule } from './orders/orders.module';
+import { OrderItemsModule } from './order_items/order_items.module';
+import { PaymentsModule } from './payments/payments.module';
+import { ProductReviewsModule } from './product-reviews/product-reviews.module';
+import { ShippingModule } from './shipping/shipping.module';
 
 @Module({
   imports: [
@@ -45,6 +53,14 @@ import { VendorsModule } from './vendors/vendors.module';
     AuthModule,
     CategoriesModule,
     VendorsModule,
+    ProductsModule,
+    ProductVariantsModule,
+    CustomersModule,
+    OrdersModule,
+    OrderItemsModule,
+    PaymentsModule,
+    ProductReviewsModule,
+    ShippingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

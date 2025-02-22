@@ -8,7 +8,10 @@ export class Category {
     @Column({ nullable: true })
     parent_id: number;
 
-    @Column({ nullable: true, length: 255 }) 
+    @Column({ nullable: true })
+    vendor_id: number;
+
+    @Column({ nullable: true, length: 255 })
     slug: string;
 
     @Column()
@@ -19,4 +22,10 @@ export class Category {
 
     @Column({ default: true })
     is_active: boolean;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    updated_at: Date;
 }
