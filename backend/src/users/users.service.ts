@@ -15,6 +15,10 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  async findOneById(id: number): Promise<User | undefined> { // ✅ Fix: Implement `findOneById`
+    return this.usersRepository.findOne({ where: { id } });
+  }
+
   async createUser(email: string, password: string): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({ email, password: hashedPassword });
@@ -27,5 +31,9 @@ export class UsersService {
       return user;
     }
     return null;
+  }
+
+  async updateUser(user: User): Promise<User> { // ✅ Fix: Implement `updateUser`
+    return this.usersRepository.save(user);
   }
 }
