@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -11,12 +11,12 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // Create User
   async create(createUserDto: CreateUserDto) {
-    const { first_name,last_name, password, email } = createUserDto;
-    
+    const { first_name, last_name, password, email } = createUserDto;
+
     // Check if the user already exists
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (existingUser) {
@@ -25,10 +25,33 @@ export class UsersService {
 
     // Hash password and save user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = this.userRepository.create({ first_name,last_name, email, password: hashedPassword });
+    const newUser = this.userRepository.create({ first_name, last_name, email, password: hashedPassword });
 
-    await this.userRepository.save(newUser); 
+    await this.userRepository.save(newUser);
     return { message: 'User created successfully', user: newUser };
+  }
+
+  async getUsers(page: number = 1, limit: number = 10, search?: string) {
+    const whereCondition = search
+      ? [
+        { first_name: Like(`%${search}%`) },
+        { email: Like(`%${search}%`) }
+      ]
+      : {};
+
+    const [users, total] = await this.userRepository.findAndCount({
+      where: whereCondition,
+      take: limit,
+      skip: (page - 1) * limit,
+      order: { id: 'DESC' },
+    });
+
+    return {
+      data: users,
+      total,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 
   // Login User
