@@ -6,6 +6,7 @@ import { UsersService } from './users/users.service';
 import { User } from './users/users.entity';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,8 @@ import { AppController } from './app.controller';
     }),
 
     TypeOrmModule.forFeature([User]),
+
+    AuthModule,
   ],
   controllers: [UsersController, AppController],
   providers: [UsersService, AppService],

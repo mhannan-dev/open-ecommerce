@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -11,7 +11,16 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
+
+  // Find User by email
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { email } });
+    } catch (error) {
+      throw new BadRequestException('Error finding user by email');
+    }
+  }
 
   // Create User
   async create(createUserDto: CreateUserDto) {
@@ -20,23 +29,29 @@ export class UsersService {
     // Check if the user already exists
     const existingUser = await this.userRepository.findOne({ where: { email } });
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new BadRequestException('User already exists');
     }
 
     // Hash password and save user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = this.userRepository.create({ first_name, last_name, email, password: hashedPassword });
+    const newUser = this.userRepository.create({
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+    });
 
     await this.userRepository.save(newUser);
-    return { message: 'User created successfully', user: newUser };
+    return { message: 'User created successfully', user: { ...newUser, password: undefined } };
   }
 
+  // Get all users with pagination and search
   async getUsers(page: number = 1, limit: number = 10, search?: string) {
     const whereCondition = search
       ? [
-        { first_name: Like(`%${search}%`) },
-        { email: Like(`%${search}%`) }
-      ]
+          { first_name: Like(`%${search}%`) },
+          { email: Like(`%${search}%`) },
+        ]
       : {};
 
     const [users, total] = await this.userRepository.findAndCount({
@@ -57,19 +72,18 @@ export class UsersService {
   // Login User
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
-
-    // Find user in the database
+    
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
-    // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new BadRequestException('Invalid password');
     }
 
-    return { message: 'Login successful', user };
+    const { password: _, ...result } = user;
+    return { message: 'Login successful', user: result };
   }
 }
