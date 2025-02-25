@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: () => ({
         type: 'mysql',
         host: process.env.DATABASE_HOST || 'localhost',
         port: Number(process.env.DATABASE_PORT) || 3306,

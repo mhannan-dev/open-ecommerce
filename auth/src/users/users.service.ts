@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
@@ -70,20 +72,20 @@ export class UsersService {
   }
 
   // Login User
-  async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
-    
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+  // async login(loginUserDto: LoginUserDto) {
+  //   console.log(loginUserDto);
+  //   const { email, password } = loginUserDto;
+  //   const user = await this.userRepository.findOne({ where: { email } });
+  //   if (!user) {
+  //     throw new NotFoundException('User not found');
+  //   }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new BadRequestException('Invalid password');
-    }
+  //   const isPasswordValid = await bcrypt.compare(password, user.password);
+  //   if (!isPasswordValid) {
+  //     throw new BadRequestException('Invalid password');
+  //   }
 
-    const { password: _, ...result } = user;
-    return { message: 'Login successful', user: result };
-  }
+  //   const { password: _, ...result } = user;
+  //   return { message: 'Login successful', user: result };
+  // }
 }
